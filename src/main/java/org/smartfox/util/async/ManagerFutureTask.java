@@ -1,10 +1,6 @@
-package net.util.async;
+package org.smartfox.util.async;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -12,8 +8,6 @@ import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implement control over async job. Can be used for scheduling next async job AFTER current via {@link ManagerFutureTask#next} methods
@@ -21,7 +15,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ManagerFutureTask<T> extends FutureTask<T> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ManagerFutureTask.class);
     private final AsyncManager asyncManager;
     private final Consumer<Runnable> executor;
     private final List<Consumer<T>> doneCallbacks = new ArrayList<>();
@@ -305,8 +298,7 @@ public class ManagerFutureTask<T> extends FutureTask<T> {
                 childFuture.run();
                 try {
                     childFuture.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    LOG.error(e.getMessage(), e);
+                } catch (InterruptedException | ExecutionException ignored) {
                 }
             }
 

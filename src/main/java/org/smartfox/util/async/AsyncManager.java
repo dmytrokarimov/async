@@ -1,17 +1,11 @@
-package net.util.async;
+package org.smartfox.util.async;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manager can be used to schedule job and run them in async way.
@@ -20,8 +14,6 @@ import org.slf4j.LoggerFactory;
  * @author Dmytro Karimov
  */
 public class AsyncManager {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AsyncManager.class);
 
     private static final int QUEUE_CAPACITY = 10_000;
 
@@ -71,24 +63,23 @@ public class AsyncManager {
     }
 
 
-    protected <T> ManagerFutureTask<T> schedule(Callable<T> job, ManagerFutureTask<?> parentFuture) {
+    <T> ManagerFutureTask<T> schedule(Callable<T> job, ManagerFutureTask<?> parentFuture) {
         return schedule(job, null, null, parentFuture);
     }
 
-    protected ManagerFutureTask<?> schedule(Runnable job, ManagerFutureTask<?> parentFuture) {
+    ManagerFutureTask<?> schedule(Runnable job, ManagerFutureTask<?> parentFuture) {
         return schedule(Executors.callable(job, null), null, null, parentFuture);
     }
 
-    protected <T> ManagerFutureTask<T> schedule(Callable<T> job, Runnable endCallback,
-                                                Consumer<Throwable> errorCallback,
-                                                ManagerFutureTask<?> parentFuture) {
+    private <T> ManagerFutureTask<T> schedule(Callable<T> job, Runnable endCallback,
+                                              Consumer<Throwable> errorCallback,
+                                              ManagerFutureTask<?> parentFuture) {
         Callable<T> task = () -> {
             CountDownLatch lock = new CountDownLatch(1 + (Objects.nonNull(endCallback) ? 1 : 0));
             T value = tryJob(lock, job, endCallback, errorCallback);
             try {
                 lock.await();
-            } catch (InterruptedException e) {
-                LOG.error(e.getMessage(), e);
+            } catch (InterruptedException ignored) {
             }
             return value;
         };
@@ -101,8 +92,7 @@ public class AsyncManager {
             AsyncJob.of(() -> {
                 try {
                     queue.put(jobEntry);
-                } catch (InterruptedException e) {
-                    LOG.error(e.getMessage(), e);
+                } catch (InterruptedException ignored) {
                 }
             }).start();
         }
@@ -148,7 +138,6 @@ public class AsyncManager {
                 while (lock.getCount() > 0) {
                     lock.countDown();
                 }
-                LOG.error(e.getMessage(), e);
                 throw new IllegalStateException(e.getMessage(), e);
             }
         }
@@ -193,19 +182,17 @@ public class AsyncManager {
             } catch (Throwable e) {
                 e.addSuppressed(callerStacktrace);
                 task.callOnErrListeners(e);
-                LOG.error(e.getMessage(), e);
             }
         }
 
         @Override
         public void run() {
             try {
-                Entry<ManagerFutureTask<?>, Throwable> jobEntry;
-                while ((jobEntry = queue.take()) != null) {
+                while (!isInterrupted()) {
+                    Entry<ManagerFutureTask<?>, Throwable> jobEntry = queue.take();
                     runTask(jobEntry.getKey(), jobEntry.getValue());
                 }
-            } catch (InterruptedException e) {
-                LOG.error(e.getMessage(), e);
+            } catch (InterruptedException ignored) {
             }
         }
     }

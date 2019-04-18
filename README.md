@@ -3,7 +3,7 @@
 This package implements some feature like AsyncManager and ManagerFutureTask.  
 AsyncManager can be used to schedule job and run them in async way:
 
-All other scheduled jobs will wa
+All other scheduled jobs will wait until first one end
 
 ```java
 	asyncManager.schedule(/*some job*/)

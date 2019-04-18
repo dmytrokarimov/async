@@ -1,4 +1,4 @@
-package net.util.async;
+package org.smartfox.util.async;
 
 import java.util.function.Supplier;
 
