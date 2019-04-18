@@ -1,14 +1,10 @@
 package com.smartfoxpro.util.async;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Runs new deamon thread and execute runnable job
  * @author Dmytro Karimov
  */
 public class AsyncJob extends Thread{
-	private static final Logger LOG = LoggerFactory.getLogger(AsyncJob.class);
 
 	private Exception error;
 	
@@ -33,7 +29,6 @@ public class AsyncJob extends Thread{
 			job.run();
 		} catch (Exception e) {
 			error = e;
-			LOG.error("Exception in async job", e);
 		}
 	}
 	
