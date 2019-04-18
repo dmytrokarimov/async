@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 
 	<groupId>com.smartfoxpro.util</groupId>
     <artifactId>async</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
 	
     <packaging>jar</packaging>
 
@@ -37,7 +37,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
         <connection>scm:git:git://github.com/dmytrokarimov/async.git</connection>
         <developerConnection>scm:git:git@github.com/dmytrokarimov/async.git</developerConnection>
         <url>https://github.com/dmytrokarimov/async</url>
-      <tag>HEAD</tag>
+      <tag>async-1.0.1</tag>
     </scm>
 
     <developers>
@@ -45,7 +45,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
             <name>Dmytro Karimov</name>
             <id>Dmytro_Karimov</id>
             <email>dmytro_karimov@live.ru</email>
-            <organization/>
+            <organization />
             <roles>
                 <role>Autor</role>
             </roles>
