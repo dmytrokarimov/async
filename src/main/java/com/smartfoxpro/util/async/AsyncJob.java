@@ -1,4 +1,4 @@
-package org.smartfox.util.async;
+package com.smartfoxpro.util.async;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

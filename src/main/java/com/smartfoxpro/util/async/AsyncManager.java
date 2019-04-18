@@ -1,4 +1,4 @@
-package org.smartfox.util.async;
+package com.smartfoxpro.util.async;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
