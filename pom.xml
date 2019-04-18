@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 
 	<groupId>com.smartfoxpro.util</groupId>
     <artifactId>async</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
 	
     <packaging>jar</packaging>
 
